@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Настраиваемый SMS-сайт PRO</title>
+<style>
+body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; min-height:100vh; margin:0; transition: background 0.3s, font-family 0.3s; }
+.container { padding:30px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.2); text-align:center; max-width:500px; width:90%; background:#fff; }
+input, select, textarea, button { padding:10px 15px; font-size:16px; border-radius:8px; border:1px solid #ccc; margin-top:10px; width:100%; box-sizing:border-box; }
+button { background:#6b8afd; color:white; border:none; cursor:pointer; margin-top:15px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Редактор SMS-сайта</h2>
+
+<input type="tel" id="phone" placeholder="Введите номер телефона">
+
+<textarea id="smsText" placeholder="Введите текст SMS"></textarea>
+
+<h3>Поисковики</h3>
+<div id="searchEnginesContainer"></div>
+<input type="text" id="newSearchName" placeholder="Название поисковика">
+<input type="text" id="newSearchURL" placeholder="URL с %s для запроса (например https://www.google.com/search?q=%s)">
+<button onclick="addSearchEngine()">Добавить поисковик</button>
+
+<label>Выберите поисковик для использования:</label>
+<select id="searchEngineSelect"></select>
+
+<label>Фон страницы:</label>
+<input type="color" id="bgColor" value="#f0f0f0">
+<input type="text" id="bgImage" placeholder="URL картинки (по желанию)">
+
+<label>Шрифт текста:</label>
+<select id="fontSelect">
+  <option value="Arial">Arial</option>
+  <option value="Courier New">Courier New</option>
+  <option value="Verdana">Verdana</option>
+  <option value="Tahoma">Tahoma</option>
+</select>
+
+<button onclick="sendSMS()">Отправить SMS</button>
+</div>
+
+<script>
+const body = document.body;
+const searchEngineSelect = document.getElementById('searchEngineSelect');
+let searchEngines = [];
+
+// Фон
+document.getElementById('bgColor').addEventListener('input', function(){
+    body.style.backgroundColor = this.value;
+});
+document.getElementById('bgImage').addEventListener('input', function(){
+    if(this.value.trim() !== ''){
+        body.style.backgroundImage = 'url(' + this.value + ')';
+        body.style.backgroundSize = 'cover';
+    } else {
+        body.style.backgroundImage = 'none';
+    }
+});
+
+// Шрифт
+document.getElementById('fontSelect').addEventListener('change', function(){
+    body.style.fontFamily = this.value;
+});
+
+function addSearchEngine(){
+    const name = document.getElementById('newSearchName').value.trim();
+    const url = document.getElementById('newSearchURL').value.trim();
+    if(!name || !url){ alert('Введите название и URL!'); return; }
+    searchEngines.push({name, url});
+    updateSearchSelect();
+    document.getElementById('newSearchName').value = '';
+    document.getElementById('newSearchURL').value = '';
+}
+
+function updateSearchSelect(){
+    searchEngineSelect.innerHTML = '';
+    searchEngines.forEach((se, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = se.name;
+        searchEngineSelect.appendChild(option);
+    });
+}
+
+function sendSMS(){
+    const phone = document.getElementById('phone').value.trim();
+    const text = encodeURIComponent(document.getElementById('smsText').value);
+    if(!phone){ alert('Введите номер!'); return; }
+    window.location.href = `sms:${phone}?body=${text}`;
+}
+</script>
+</body>
+</html>

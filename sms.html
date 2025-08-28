@@ -1,1 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Отправить котика / Челябинск</title>
+<style>
+  :root {
+    --bg-color: #f0f0f0;
+    --text-color: #000000;
+    --container-bg: #ffffff;
+    --button-bg: #6b8afd;
+    --button-color: #ffffff;
+  }
+  [data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --container-bg: #1e1e1e;
+    --button-bg: #4a6ef1;
+    --button-color: #ffffff;
+  }
+  body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:var(--bg-color); color:var(--text-color); margin:0; }
+  .container { background:var(--container-bg); padding:30px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.2); text-align:center; max-width:400px; width:90%; }
+  input, button, select { padding:10px 15px; font-size:16px; border-radius:8px; border:1px solid #ccc; margin-top:10px; width:100%; box-sizing:border-box; }
+  button { background:var(--button-bg); color:var(--button-color); border:none; cursor:pointer; }
+  .footer { font-size:12px; margin-top:20px; color:var(--text-color); opacity:0.6; }
+</style>
+</head>
+<body data-theme="light">
+<div class="container">
+  <h2>Отправить маме котика 🐱</h2>
+  
+  <p>Введите номер мамы (с кодом страны, например +49)</p>
+  <input type="tel" id="phone" placeholder="+49XXXXXXXXX">
 
+  <label>Выбери поисковик:</label>
+  <select id="searchEngine">
+    <option value="yandex">Яндекс</option>
+    <option value="google">Google</option>
+  </select>
+
+  <button onclick="sendSMS()">Отправить котика</button>
+  <button onclick="randomCatOrChelyabinsk()">Челябинск Или Котик</button>
+  <button onclick="toggleTheme()">Тёмный/Светлый режим</button>
+
+  <div class="footer">
+    Короче я придумал приложение ну тоесть сайт тоесть html я darkbluecolor а все делал ChatGPT 6 Pro
+  </div>
+</div>
+
+<script>
+function sendSMS() {
+  const phone = document.getElementById('phone').value.trim();
+  if(!phone){ alert("Введите номер!"); return; }
+
+  const message = encodeURIComponent("Привет! От ChatGPT 🐱\n\nhttps://yandex.ru/images/search?lr=195&source=serp&stype=image&text=котики");
+  window.location.href = `sms:${phone}?body=${message}`;
+
+  // Шанс 5% открыть YouTube
+  if(Math.random() <= 0.05){
+    window.open("https://www.youtube.com/@SuperDarkBlueColor", "_blank");
+  }
+}
+
+function randomCatOrChelyabinsk() {
+  const engine = document.getElementById('searchEngine').value;
+  const chance = Math.random();
+  if(chance <= 0.9){
+    // 90% — котики
+    if(engine === "yandex"){
+      window.open("https://yandex.ru/images/search?lr=195&source=serp&stype=image&text=котики", "_blank");
+    } else {
+      window.open("https://www.google.com/search?tbm=isch&q=котики", "_blank");
+    }
+  } else {
+    // 10% — Челябинск
+    if(engine === "yandex"){
+      window.open("https://yandex.ru/maps/?text=Челябинск", "_blank");
+    } else {
+      window.open("https://www.google.com/maps/search/Челябинск", "_blank");
+    }
+  }
+}
+
+function toggleTheme() {
+  const body = document.body;
+  if(body.getAttribute("data-theme") === "light"){
+    body.setAttribute("data-theme", "dark");
+  } else {
+    body.setAttribute("data-theme", "light");
+  }
+}
+</script>
+</body>
+</html>
